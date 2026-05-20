@@ -1,0 +1,13 @@
+| Status | Behaviour | Route |
+| --- | --- | --- |
+| ``APPROVED`` | Execute downstream | ``routing.on_success`` |
+| ``REJECTED`` | Drop execution | ``governance-service/v1/parameter-error`` |
+| ``ESCALATED`` | Freeze payload | ``governance-service/v1/manual-review`` |
+
+error_context:
+  error_class: STRUCTURAL_ERROR | PARAMETER_ERROR | GOVERNANCE_ERROR
+  error_code: ROSS-VAL-###
+  error_message: string
+  offending_fields: [string]
+  origin_stage: STRUCTURAL | SEMANTIC | GOVERNANCE
+  timestamp: iso-8601
