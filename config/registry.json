@@ -1,0 +1,26 @@
+{
+  "actions": {
+    "UPDATE_USER_PROFILE": {
+      "version": "1.0.0",
+      "status": "ACTIVE",
+      "parameters": {
+        "email": {
+          "type": "string",
+          "required": true,
+          "validation_type": "regex",
+          "expression": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        },
+        "role": {
+          "type": "string",
+          "required": true,
+          "validation_type": "enum",
+          "allowed_values": ["Admin", "User", "Viewer"]
+        }
+      },
+      "routing": {
+        "on_success": "identity-service/v1/updateUser",
+        "on_failure": "governance-service/v1/parameter-error"
+      }
+    }
+  }
+}
