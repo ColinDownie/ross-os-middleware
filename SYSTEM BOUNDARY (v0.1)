@@ -1,0 +1,13 @@
+Ross‑OS v0.1 is operationally finite:
+
+1 canonical schema
+
+1 normalization engine
+
+1 validation engine
+
+1 action registry
+
+1 error protocol
+
+This is a complete, minimal, production‑credible middleware system.
