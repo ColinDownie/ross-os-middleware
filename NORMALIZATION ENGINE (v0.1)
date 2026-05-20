@@ -1,0 +1,23 @@
+Purpose: Strip model “personality” and flatten text into canonical form.
+Ross‑OS applies three sequential rule groups:
+
+A. Lexical Sanitization
+Remove conversational padding
+
+Strip Markdown, emojis, backticks
+
+Normalize whitespace
+
+Enforce UTF‑8 NFC
+
+B. Entity & Intent Isolation
+Extract imperative verb phrase → primary_action
+
+Extract key‑value pairs → parameters.key_variables
+
+C. Canonical Format String
+All normalized text compiles into:
+
+Code
+[Action]. [Parameter 1]: [Value 1]. [Parameter 2]: [Value 2].
+This becomes clean_text_content.
