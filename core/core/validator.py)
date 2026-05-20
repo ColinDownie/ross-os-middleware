@@ -1,0 +1,58 @@
+import re
+
+class RossValidator:
+    def __init__(self, registry_manifest: dict):
+        self.registry = registry_manifest.get("actions", {})
+
+    def execute_firewalls(self, primary_action: str, parameters: dict) -> tuple[str, str, list[str]]:
+        """
+        Executes Structural, Semantic, and Governance Firewalls sequentially.
+        Returns: (validation_status, error_class, error_messages)
+        """
+        # 1. GOVERNANCE FIREWALL: Check if action exists and is ACTIVE
+        if primary_action not in self.registry:
+            return "ESCALATED", "GOVERNANCE_ERROR", [f"Action '{primary_action}' not found in registry."]
+            
+        action_spec = self.registry[primary_action]
+        if action_spec.get("status") != "ACTIVE":
+            return "REJECTED", "GOVERNANCE_ERROR", [f"Action '{primary_action}' is current INACTIVE or DEPRECATED."]
+
+        spec_params = action_spec.get("parameters", {})
+        errors = []
+        error_class = None
+
+        # 2. STRUCTURAL FIREWALL: Verify presence of required schema fields
+        for param_name, constraints in spec_params.items():
+            if constraints.get("required", False) and param_name not in parameters:
+                errors.append(f"Missing required parameter: {param_name}")
+                error_class = "STRUCTURAL_ERROR"
+
+        if errors:
+            return "REJECTED", error_class, errors
+
+        # 3. SEMANTIC FIREWALL: Verify data limits (Regex & Enums)
+        for param_name, value in parameters.items():
+            if param_name not in spec_params:
+                # Forbidden fields protection
+                errors.append(f"Unmapped parameter field passed: {param_name}")
+                error_class = "STRUCTURAL_ERROR"
+                continue
+
+            constraints = spec_params[param_name]
+            v_type = constraints.get("validation_type")
+
+            if v_type == "regex" and "expression" in constraints:
+                if not re.match(constraints["expression"], str(value)):
+                    errors.append(f"Parameter '{param_name}' failed regex pattern verification.")
+                    error_class = "PARAMETER_ERROR"
+
+            elif v_type == "enum" and "allowed_values" in constraints:
+                if value not in constraints["allowed_values"]:
+                    errors.append(f"Parameter '{param_name}' value '{value}' not inside allowed enums.")
+                    error_class = "PARAMETER_ERROR"
+
+        if errors:
+            return "REJECTED", error_class, errors
+
+        # Happy Path Approved
+        return "APPROVED", "", []
