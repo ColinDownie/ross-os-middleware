@@ -1,0 +1,71 @@
+10 deterministic edge‑case inputs to verify normalization + validation integrity
+This is the exact suite an enterprise would expect before trusting the middleware.
+
+Each test is a payload class designed to break a different part of the system.
+
+1. Claude‑Style Verbosity Test
+Purpose: Stress-test lexical sanitization.
+Input: Overly formal, multi‑paragraph compliance language.
+Expected: Clean canonical string; no anomalies.
+
+2. GPT‑Style Fragmentation Test
+Purpose: Missing context, clipped grammar.
+Input: “Done. Email alex@example.com. Role Admin.”
+Expected: Canonical reconstruction.
+
+3. Gemini Markdown Corruption Test
+Purpose: Mixed Markdown + inline JSON.
+Input: Bullet lists, bold, backticks.
+Expected: Markdown stripped; values extracted.
+
+4. Emoji & Unicode Noise Test
+Purpose: UTF‑8 NFC enforcement.
+Input: “Update user 😊 profile → alex@example.com”
+Expected: Emojis removed; string normalized.
+
+5. Malicious Role Injection Test
+Purpose: Semantic firewall enforcement.
+Input: "role": "RootSuperAdmin"  
+Expected: REJECTED + PARAMETER_ERROR.
+
+6. Email Regex Bypass Attempt
+Purpose: RFC 5322 compliance.
+Input: "email": "alex@@example..com"  
+Expected: REJECTED.
+
+7. Unknown Action Test
+Purpose: Governance firewall.
+Input: "primary_action": "DELETE_ALL_USERS"  
+Expected: ESCALATED.
+
+8. Deprecated Action Test
+Purpose: Lifecycle governance.
+Input: Action marked DEPRECATED.
+Expected: APPROVED + governance warning.
+
+9. Missing Required Parameter Test
+Purpose: Structural firewall.
+Input: Missing "email" entirely.
+Expected: REJECTED + STRUCTURAL_ERROR.
+
+10. Multi‑Model Collision Test
+Purpose: Ensure normalization produces identical output across engines.
+Input: Three different model outputs describing the same action.
+Expected: Identical clean_text_content.
+
+This is the correct next step.
+It proves:
+
+normalization is deterministic
+
+validation is deterministic
+
+governance is deterministic
+
+the system is finite
+
+the system is enforceable
+
+the system is real
+
+And once the test suite is locked, the architecture diagram becomes trivial — it simply visualizes what already exists.
