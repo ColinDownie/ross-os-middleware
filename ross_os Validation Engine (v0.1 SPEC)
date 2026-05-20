@@ -1,0 +1,150 @@
+# **ROSS‑OS VALIDATION ENGINE (v0.1 SPEC)**  
+**Classification:** Operational Core  
+**Status:** Required for System Integrity  
+**Scope:** Applies to all canonical payloads  
+
+---
+
+# **1. PURPOSE**
+The Validation Engine enforces **semantic correctness** and **schema compliance** on every normalized payload.
+
+It is the gatekeeper that toggles:
+
+- **APPROVED**  
+- **REJECTED**  
+- **ESCALATED**  
+
+This is the layer that transforms Ross‑OS from a formatting tool into a **governance system**.
+
+---
+
+# **2. VALIDATION PIPELINE (3‑STAGE LOOP)**
+
+## **Stage 1 — Schema Compliance Check**
+Ross‑OS verifies that the normalized payload contains:
+
+- required top‑level keys  
+- required nested keys  
+- correct data types  
+- no forbidden fields  
+
+If any structural violation occurs:
+
+- `validation_status = REJECTED`  
+- `next_canonical_hop = governance/error-handler`  
+
+This is the **structural firewall**.
+
+---
+
+## **Stage 2 — Parameter Validation**
+Each action in the Action Registry defines:
+
+- required parameters  
+- optional parameters  
+- allowed values  
+- validation rules  
+
+For `UPDATE_USER_PROFILE`, the rules are:
+
+### **Email Validation**
+- MUST match RFC 5322  
+- MUST NOT contain whitespace  
+- MUST NOT contain control characters  
+
+### **Role Validation**
+- MUST be one of:  
+  - `Admin`  
+  - `User`  
+  - `Viewer`  
+
+If any parameter fails:
+
+- `validation_status = REJECTED`  
+- `next_canonical_hop = governance/parameter-error`  
+
+This is the **semantic firewall**.
+
+---
+
+## **Stage 3 — Action Integrity Check**
+Ross‑OS verifies:
+
+- the `primary_action` exists in the Action Registry  
+- the action is active (not deprecated)  
+- the action is allowed for the calling context  
+
+If the action is unknown:
+
+- `validation_status = ESCALATED`  
+- `next_canonical_hop = governance/action-review`  
+
+This is the **governance firewall**.
+
+---
+
+# **3. VALIDATION ENGINE OUTPUT (v0.1)**
+
+After running all three stages, Ross‑OS emits:
+
+```json
+{
+  "validation_status": "APPROVED | REJECTED | ESCALATED",
+  "validation_errors": ["string"],
+  "next_canonical_hop": "string"
+}
+```
+
+This is the **decision layer**.
+
+---
+
+# **4. WHY VALIDATION COMES BEFORE THE ACTION REGISTRY**
+Because:
+
+- Normalization = removes chaos  
+- Validation = enforces truth  
+- Registry = defines allowed actions  
+
+The registry is a **lookup table**.  
+The validation engine is a **governance system**.
+
+We must build governance before scale.
+
+---
+
+# **5. THE NEXT LOCK: ACTION REGISTRY FORMAT**
+Now that:
+
+- Normalization Ruleset = DONE  
+- Validation Engine Spec = DONE  
+
+The next engineering task is:
+
+> **Define the Action Registry Format.**
+
+This is the component that makes Ross‑OS scalable beyond a single workflow.
+
+It will define:
+
+- how actions are stored  
+- how they are versioned  
+- how they are validated  
+- how they are extended  
+- how they are deprecated  
+- how they are governed  
+
+This is the **API of the middleware itself**.
+
+---
+
+# **NEXT MOVE**  
+Choose the next engineering artifact:
+
+- **Define the Action Registry Format**  
+- **Define the Routing Table**  
+- **Define the Error Handling Protocol**  
+
+Any one of these will take Ross‑OS from **v0.1 spec** → **v0.1 prototype**.
+
+And that’s where the system becomes real.
