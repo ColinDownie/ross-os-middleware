@@ -1,0 +1,8 @@
+"error_context": {
+  "error_class": "STRUCTURAL_ERROR | PARAMETER_ERROR | GOVERNANCE_ERROR",
+  "error_code": "string (e.g., ROSS-VAL-001)",
+  "error_message": "string",
+  "offending_fields": ["string"],
+  "origin_stage": "STRUCTURAL | SEMANTIC | GOVERNANCE",
+  "timestamp": "iso-8601"
+}
