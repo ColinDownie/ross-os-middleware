@@ -1,0 +1,33 @@
+END‑TO‑END EXECUTION TRACE
+Raw Input (GPT‑style conversational noise)
+“Hey there! Sure, I can help you update that user profile… email is alex@example.com… role is Admin…”
+
+Ross‑OS Canonical Output
+json
+{
+  "$schema": "https://rossconsultancy.io/schemas/v0.1/payload.json",
+  "metadata": {
+    "transaction_id": "c3b2f1e0-4d9a-4b8f-9b1e-2f7e3b1c9a12",
+    "timestamp": "2026-05-20T20:46:00Z",
+    "source_engine": "gpt"
+  },
+  "semantic_intent": {
+    "primary_action": "UPDATE_USER_PROFILE",
+    "confidence_score": 0.94,
+    "parameters": {
+      "key_variables": {
+        "email": "alex@example.com",
+        "role": "Admin"
+      }
+    }
+  },
+  "payload_normalization": {
+    "raw_token_count": 52,
+    "clean_text_content": "Update user profile. Email: alex@example.com. Role: Admin.",
+    "structural_anomalies_detected": false
+  },
+  "governance_routing": {
+    "validation_status": "APPROVED",
+    "next_canonical_hop": "identity-service/v1/updateUser"
+  }
+}
