@@ -1,0 +1,29 @@
+Purpose: Enforce structural, semantic, and governance correctness.
+Ross‑OS applies three firewalls:
+
+A. Structural Firewall
+Required keys present
+
+Correct data types
+
+No forbidden fields
+
+Violations → REJECTED
+
+B. Semantic Firewall
+Regex validation
+
+Enum validation
+
+Required parameter enforcement
+
+Violations → REJECTED
+
+C. Governance Firewall
+Action exists in registry
+
+Action is ACTIVE
+
+Action allowed in context
+
+Violations → ESCALATED
